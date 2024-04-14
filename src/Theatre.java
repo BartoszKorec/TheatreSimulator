@@ -75,58 +75,60 @@ public class Theatre {
         System.out.println(separatorLine);
     }
 
+    private NavigableSet<Seat> getFreeSeats(char row, int minColumn, int maxColumn) {
+
+        Seat minSeat = new Seat(row, minColumn);
+        Seat maxSeat = new Seat(row, maxColumn);
+
+        NavigableSet<Seat> set = new TreeSet<>(seats.subSet(minSeat, true,
+                maxSeat, true));
+
+        NavigableSet<Seat> set2 = new TreeSet<>(set);
+        for(var i : set) {
+            if(i.isReserved) set2 = set.tailSet(i, true);
+        }
+        return set2;
+    }
+
     public void reserveSeats(int tickets, char minRow, int minColumn,
                              char maxRow, int maxColumn, boolean isContiguous) {
 
-        Seat minSeat = new Seat(minRow, minColumn);
-        Seat maxSeat = new Seat(maxRow, maxColumn);
-
-        if (!validate(minSeat)) return;
-        if (!validate(maxSeat)) return;
+        if (!validate(new Seat(minRow, minColumn))) return;
+        if (!validate(new Seat(maxRow, maxColumn))) return;
 
         List<NavigableSet<Seat>> sets = new ArrayList<>((int) maxRow - (int) minRow);
         for(char i = minRow; i <= maxRow; i++) {
-            Seat minSeat1 = new Seat(i, minColumn);
-            Seat maxSeat1 = new Seat(i, maxColumn);
-            sets.add(seats.subSet(minSeat1, true, maxSeat1, true));
+            sets.add(getFreeSeats(i, minColumn, maxColumn));
         }
-
-        NavigableSet<Seat> sub = seats.subSet(minSeat, true, maxSeat, true);
-
-        int reservedSeatsInSub = 0;
+        NavigableSet<Seat> sub = null;
         if(isContiguous) {
-            for(var j : sets) {
-                int temp = 0;
-                NavigableSet<Seat> temp2 = new TreeSet<>(j);
-                for (var i : j) {
-                    if (!i.isReserved) {
-                        temp++;
-                    }
-                    if (temp == tickets) break;
-                    if (i.isReserved) {
-                        temp2 = sub.tailSet(i, true);
-                        reservedSeatsInSub = Integer.parseInt(i.seatNum.substring(1));
-                    }
+            for(var i : sets) {
+                if(i.size() == tickets) {
+                    sub = i;
+                    break;
+                }   else if(i.size() > tickets) {
+                    sub = i.headSet(new Seat(i.first().seatNum.charAt(0), minColumn+tickets), false);
+                    break;
                 }
-                sub = temp2;
             }
         } else {
+            sub = seats.subSet(new Seat(minRow, minColumn), true,
+                    new Seat(maxRow, maxColumn), true);
+            int reservedSeatsInSub = 0;
             for(var i : sub) {
                 if(i.isReserved) reservedSeatsInSub++;
             }
+            if(tickets > sub.size()-reservedSeatsInSub) {
+                System.out.println("No places available!");
+                return;
+            }
         }
-
-        if(tickets > sub.size()-reservedSeatsInSub) {
-            System.out.println("No places available");
+        if(sub == null) {
+            System.out.println("No places available!");
             return;
         }
-
         for(var i : sub) {
-            if(!i.isReserved) {
-                i.isReserved = true;
-                tickets--;
-            }
-            if(tickets == 0) break;
+            seats.floor(i).isReserved = true;
         }
     }
 
