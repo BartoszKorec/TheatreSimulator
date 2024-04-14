@@ -110,14 +110,17 @@ public class Theatre {
 
             NavigableSet<Seat> set2 = new TreeSet<>();
             for (var i : set) {
-                if(set2.size() == tickets) break;
                 if(!i.isReserved) {
                     set2.add(i);
                 } else {
                     set2 = new TreeSet<>();
                 }
+                if(set2.size() == tickets) break;
             }
-            if(set2.size() == tickets) set3 = set2;
+            if(set2.size() == tickets) {
+                set3 = set2;
+                break;
+            }
         }
         if(set3 != null) {
             for(var i : set3) {
