@@ -20,5 +20,8 @@ public class Main {
         //theatre.printSeats();
         theatre.reserveSeats(1, 'B', 1, 'C', 10);
         theatre.printSeats();
+        theatre.reserveSeats(4, 'M', 1, 'Z', 10);
+        theatre.reserveSeats(10, 'A', 1, 'E', 10);
+        theatre.printSeats();
     }
 }
