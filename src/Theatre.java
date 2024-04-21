@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
@@ -74,25 +72,6 @@ public class Theatre {
         }
         System.out.println(separatorLine);
     }
-
-//    private NavigableSet<Seat> getFreeSeats(int count, char row, int minColumn,
-//                                            int maxColumn) {
-//
-//        Seat minSeat = new Seat(row, minColumn);
-//        Seat maxSeat = new Seat(row, maxColumn);
-//
-//        NavigableSet<Seat> set = new TreeSet<>(seats.subSet(minSeat, true,
-//                maxSeat, true));
-//
-//        NavigableSet<Seat> set2 = new TreeSet<>();
-//
-//        for(var i : set) {
-//            if(!i.isReserved) set2.add(i);
-//            else set2 = set2.tailSet(i, false);
-//            if(set2.size() == count) break;
-//        }
-//        return set2.size() == count ? set2 : null;
-//    }
 
     public void reserveSeats(int tickets, char minRow, int minColumn,
                              char maxRow, int maxColumn, boolean isContiguous) {

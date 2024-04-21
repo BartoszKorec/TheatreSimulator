@@ -1,7 +1,7 @@
 public class Main {
     public static void main(String[] args) {
 
-        Theatre theatre = new Theatre("Teatr Ludowy", 10, 100);
+        Theatre theatre = new Theatre("Teatr Slowackiego", 10, 100);
 
         theatre.reserve('A', 3);
         theatre.reserve('A', 3);
